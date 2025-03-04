@@ -1,21 +1,60 @@
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
-import React from 'react'
+import React, { useContext } from 'react'
 import { useParams } from 'react-router-dom'
+import { Context } from '../provider/AuthProvider';
+import Swal from 'sweetalert2';
 
 export const FlightsDetails = () => {
 
     let {id}= useParams()
+
+    let {user}=useContext(Context)
+    
 
     const fetchFlights = async () => {
         const { data } = await axios.get(`http://localhost:3000/flightsDetails/${id}`); // Replace with your API
         return data;
       };
 
-      const { data: flights, isLoading, error } = useQuery({
+      const { data: flights, isLoading, error,refetch } = useQuery({
         queryKey: ["flights"], 
         queryFn: fetchFlights, 
       });
+
+      let handlebook=(item)=>{
+        // console.log(item)
+
+        let bookData={
+          flight_id:id,
+          airplaneImage:item?.airplaneImage,
+          airline:item?.airline,
+          flightNumber:item?.flightNumber,
+          aircraft:item?.aircraft,
+          email:user?.email,
+          status:"pending"
+
+
+        }
+
+        console.log(bookData)
+
+        axios.post("http://localhost:3000/bookedData",bookData)
+        .then((res) => {
+          if (res.data.insertedId) {
+            refetch()
+            Swal.fire({
+              title: "Flight Booked Successfully!",
+              icon: "success",
+              draggable: true
+            });
+          }
+        })
+        .catch((error) => {
+          console.error("User already exists or error occurred:", error);
+        });
+
+      }
 
 
   return (
@@ -49,13 +88,14 @@ export const FlightsDetails = () => {
           
           <div className="flex justify-between items-center">
             <p className={`text-sm ${flights?.status ? 'text-green-500' : 'text-red-500'}`}>
-              Status: {flights?.status ? 'Available' : 'Not Available'}
+              Status: {flights?.status=="available" ? 'Available' : 'Not Available'}
             </p>
             <button
-              disabled={!flights?.status}
+            onClick={()=>handlebook(flights)}
+              disabled={flights?.status=="unavailable"}
               className={`py-2 px-4 rounded-md text-white ${flights?.status ? 'bg-blue-500' : 'bg-gray-500 cursor-not-allowed'}`}
             >
-              {flights?.status ? 'Book Now' : 'Not Available'}
+              {flights?.status=="available" ? 'Book Now' : 'Not Available'}
             </button>
           </div>
         </div>

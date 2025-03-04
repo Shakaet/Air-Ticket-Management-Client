@@ -40,6 +40,7 @@ export const Nav = () => {
             >
               <li><Link to="/">Home</Link></li>
               <li><Link to="/allflights">All Flights</Link></li>
+              <li><Link to="/mybookings">My Bookings</Link></li>
             </ul>
           </div>
           <Link to="/" className="text-2xl font-bold tracking-wide">
@@ -52,6 +53,7 @@ export const Nav = () => {
           <ul className="menu menu-horizontal px-1 space-x-4 font-semibold text-xl">
             <li><Link to="/">Home</Link></li>
             <li><Link to="/allflights">All Flights</Link></li>
+            <li><Link to="/mybookings">My Bookings</Link></li>
           </ul>
         </div>
 
