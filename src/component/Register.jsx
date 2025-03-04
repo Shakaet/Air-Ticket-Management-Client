@@ -91,9 +91,12 @@ export const Register = () => {
       </button>
     </form>
     <div className="text-center mt-4">
-      <span>Already have an account? </span>
-      <Link to={"/login"} className="text-blue-500">Login</Link>
+      
       <SocialLogin></SocialLogin>
+      <div className='mt-4'>
+      <span>Already have an account? </span>
+      <Link to={"/login"} className="text-blue-500  font-bold">Login</Link>
+      </div>
     </div>
   </div>
 </div>

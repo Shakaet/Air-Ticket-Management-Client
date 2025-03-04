@@ -6,11 +6,19 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { MainLayout } from './layout/MainLayout.jsx';
 import { Home } from './component/Home.jsx';
-import { Login } from './component/Login.jsx';
+
 import { Register } from './component/Register.jsx';
 import AuthProvider from './provider/AuthProvider.jsx';
+import Login from './component/Login.jsx';
+import ForgetPass from './component/ForgetPass.jsx';
+import { AllFlights } from './component/AllFlights.jsx';
+import { FlightsDetails } from './component/flightsDetails.jsx';
+
+
+
 
 const router = createBrowserRouter([
   {
@@ -28,13 +36,28 @@ const router = createBrowserRouter([
       {
         path:"/register",
         element:<Register></Register>
+      },
+      {
+        path:"/forget-password",
+        element:<ForgetPass></ForgetPass>
+      },
+      {
+        path:"/allflights",
+        element:<AllFlights></AllFlights>
+      },
+      {
+        path:"/flightDetails/:id",
+        element:<FlightsDetails></FlightsDetails>
       }
     ]
   },
 ]);
+const queryClient = new QueryClient();
 
 createRoot(document.getElementById('root')).render(
+  <QueryClientProvider client={queryClient}>
   <AuthProvider>
      <RouterProvider router={router} />
      </AuthProvider>,
+</QueryClientProvider>
 )
