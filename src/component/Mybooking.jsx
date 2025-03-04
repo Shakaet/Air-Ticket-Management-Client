@@ -4,6 +4,7 @@ import React, { useContext } from 'react'
 import { motion } from "framer-motion";
 import { Context } from '../provider/AuthProvider';
 import Swal from 'sweetalert2';
+import { h2 } from 'framer-motion/client';
 
 
 
@@ -56,6 +57,20 @@ export const Mybooking = () => {
             }
           });
       }
+
+
+
+
+      if (data.length === 0) {
+        return (
+          <div className="flex justify-center items-center h-screen">
+            <h2 className="text-4xl font-bold text-red-500 animate-pulse">
+              🚀 No Data Found! 🚀
+            </h2>
+          </div>
+        );
+      }
+      
     
        
         

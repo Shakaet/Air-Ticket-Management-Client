@@ -18,7 +18,7 @@ const fetchFlights = async () => {
   
     console.log("Flights Data:", data);
   
-    if (isLoading) return <p>Loading flights...</p>;
+    if (isLoading) return <progress className="progress w-56"></progress>
     if (error) return <p>Error loading flights: {error.message}</p>;
   
     const flights = Array.isArray(data) ? data : data?.flights || []; // Ensure it's an array

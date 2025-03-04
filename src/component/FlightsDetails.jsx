@@ -10,6 +10,7 @@ export const FlightsDetails = () => {
     let {id}= useParams()
 
     let {user}=useContext(Context)
+    console.log(user)
     
 
     const fetchFlights = async () => {

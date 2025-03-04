@@ -17,6 +17,8 @@ import ForgetPass from './component/ForgetPass.jsx';
 import { AllFlights } from './component/AllFlights.jsx';
 import { FlightsDetails } from './component/flightsDetails.jsx';
 import { Mybooking } from './component/Mybooking.jsx';
+import PrivateRoute from './assets/route/PrivateRoute.jsx';
+import UserRoute from './assets/route/UserRoute.jsx';
 
 
 
@@ -48,11 +50,11 @@ const router = createBrowserRouter([
       },
       {
         path:"/flightDetails/:id",
-        element:<FlightsDetails></FlightsDetails>
+        element:<PrivateRoute><FlightsDetails></FlightsDetails></PrivateRoute>
       },
       {
         path:"/mybookings",
-        element:<Mybooking></Mybooking>
+        element:<UserRoute><Mybooking></Mybooking></UserRoute>
       }
     ]
   },

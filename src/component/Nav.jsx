@@ -1,9 +1,15 @@
 import React, { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Context } from "../provider/AuthProvider";
+import useAdmin from "../hook/useAdmin";
+import useUser from "../hook/useUser";
 
 
 export const Nav = () => {
+
+  let [isAdmin] = useAdmin()
+  let [isUser]= useUser()
+  
   
     const { user, signOuts } = useContext(Context);
     let nav=useNavigate()
@@ -40,7 +46,11 @@ export const Nav = () => {
             >
               <li><Link to="/">Home</Link></li>
               <li><Link to="/allflights">All Flights</Link></li>
-              <li><Link to="/mybookings">My Bookings</Link></li>
+              
+                {
+                  isUser && <li><Link to="/mybookings">My Bookings</Link></li>
+                }
+              
             </ul>
           </div>
           <Link to="/" className="text-2xl font-bold tracking-wide">
@@ -53,7 +63,10 @@ export const Nav = () => {
           <ul className="menu menu-horizontal px-1 space-x-4 font-semibold text-xl">
             <li><Link to="/">Home</Link></li>
             <li><Link to="/allflights">All Flights</Link></li>
-            <li><Link to="/mybookings">My Bookings</Link></li>
+            {
+                  isUser && <li><Link to="/mybookings">My Bookings</Link></li>
+            }
+            
           </ul>
         </div>
 
