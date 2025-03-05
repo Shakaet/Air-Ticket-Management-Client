@@ -1,94 +1,115 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Context } from "../provider/AuthProvider";
 import useAdmin from "../hook/useAdmin";
 import useUser from "../hook/useUser";
-
+import { FaBars, FaUserCircle } from "react-icons/fa";
 
 export const Nav = () => {
+  let [isAdmin] = useAdmin();
+  let [isUser] = useUser();
+  const { user, signOuts } = useContext(Context);
+  let navigate = useNavigate();
+  const [isOpen, setIsOpen] = useState(false);
 
-  let [isAdmin] = useAdmin()
-  let [isUser]= useUser()
-  
-  
-    const { user, signOuts } = useContext(Context);
-    let nav=useNavigate()
-   let logout=()=>{
-    signOuts()
-    nav("/login")
+  let logout = () => {
+    signOuts();
+    navigate("/login");
+  };
 
-   }
   return (
-    <div className="bg-gradient-to-r from-indigo-500 to-purple-600 shadow-lg">
-      <div className="navbar container mx-auto px-4 py-3 text-white">
-        {/* Left Side - Brand & Mobile Menu */}
-        <div className="navbar-start">
-          <div className="dropdown">
-            <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M4 6h16M4 12h8m-8 6h16"
-                />
-              </svg>
-            </div>
-            <ul
-              tabIndex={0}
-              className="menu menu-sm dropdown-content bg-white text-black mt-3 w-52 rounded-box p-2 shadow"
-            >
-              <li><Link to="/">Home</Link></li>
-              <li><Link to="/allflights">All Flights</Link></li>
-              
-                {
-                  isUser && <li><Link to="/mybookings">My Bookings</Link></li>
-                }
-              
-            </ul>
-          </div>
+    <div className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 shadow-lg">
+      <div className="container mx-auto px-4 py-3 flex justify-between items-center text-white">
+        {/* Left - Brand Logo & Mobile Menu */}
+        <div className="flex items-center gap-4">
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="lg:hidden text-2xl p-2"
+          >
+            <FaBars />
+          </button>
           <Link to="/" className="text-2xl font-bold tracking-wide">
             ✈️ Air Tickets
           </Link>
         </div>
 
         {/* Center - Desktop Menu */}
-        <div className="navbar-center hidden lg:flex">
-          <ul className="menu menu-horizontal px-1 space-x-4 font-semibold text-xl">
-            <li><Link to="/">Home</Link></li>
-            <li><Link to="/allflights">All Flights</Link></li>
-            {
-                  isUser && <li><Link to="/mybookings">My Bookings</Link></li>
-            }
-            
-          </ul>
+        <div className="hidden lg:flex space-x-6 font-semibold text-lg">
+          <Link to="/" className="hover:text-yellow-300 transition">Home</Link>
+          <Link to="/allflights" className="hover:text-yellow-300 transition">All Flights</Link>
+          {isUser && (
+            <Link to="/mybookings" className="hover:text-yellow-300 transition">
+              My Bookings
+            </Link>
+          )}
+          {isAdmin && (
+            <>
+              <Link to="/managebooking" className="hover:text-yellow-300 transition">
+                Manage Booking
+              </Link>
+              <Link to="/manageUser" className="hover:text-yellow-300 transition">
+                Manage User
+              </Link>
+            </>
+          )}
         </div>
 
-        {/* Right Side - Auth Button */}
-        <div className="navbar-end">
+        {/* Right - Profile & Auth Button */}
+        <div className="flex items-center gap-4">
           {user ? (
-            <button
-              onClick={logout}
-              className="btn bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2"
-            >
-              Logout
-            </button>
+            <div className="flex items-center gap-2">
+              
+                <FaUserCircle className="text-3xl" />
+            
+              
+              <button
+                onClick={logout}
+                className="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-md text-white font-semibold"
+              >
+                Logout
+              </button>
+            </div>
           ) : (
             <Link
               to="/login"
-              className="btn bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2"
+              className="bg-green-500 hover:bg-green-600 px-4 py-2 rounded-md text-white font-semibold"
             >
               Login
             </Link>
           )}
         </div>
       </div>
+
+      {/* Mobile Dropdown Menu */}
+      {isOpen && (
+        <div className="lg:hidden bg-white text-black p-4 rounded-md shadow-md absolute left-0 right-0 top-16 z-50">
+          <ul className="space-y-3 font-semibold text-lg">
+            <li><Link to="/" onClick={() => setIsOpen(false)}>Home</Link></li>
+            <li><Link to="/allflights" onClick={() => setIsOpen(false)}>All Flights</Link></li>
+            {isUser && (
+              <li>
+                <Link to="/mybookings" onClick={() => setIsOpen(false)}>
+                  My Bookings
+                </Link>
+              </li>
+            )}
+            {isAdmin && (
+              <>
+                <li>
+                  <Link to="/managebooking" onClick={() => setIsOpen(false)}>
+                    Manage Booking
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/manageUser" onClick={() => setIsOpen(false)}>
+                    Manage User
+                  </Link>
+                </li>
+              </>
+            )}
+          </ul>
+        </div>
+      )}
     </div>
   );
 };

@@ -18,7 +18,7 @@ export const Register = () => {
         let email=e.target.email.value
         let pass=e.target.password.value
 
-        console.log(name,email,pass)
+        // console.log(name,email,pass)
 
         let userData={
             user_name:name,
@@ -31,14 +31,14 @@ export const Register = () => {
     
 
     axios
-      .post("http://localhost:3000/users", userData)
+      .post("https://air-ticket-server-xi.vercel.app/users", userData)
       .then((res) => {
         if (res.data.insertedId) {
-          console.log("User added successfully");
+          // console.log("User added successfully");
         }
       })
       .catch((error) => {
-        console.error("User already exists or error occurred:", error);
+        // console.error("User already exists or error occurred:", error);
       });
 
     e.target.reset();

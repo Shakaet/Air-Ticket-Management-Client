@@ -1,85 +1,65 @@
-import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
-import React, { useContext } from 'react'
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import React, { useContext } from "react";
 import { motion } from "framer-motion";
-import { Context } from '../provider/AuthProvider';
-import Swal from 'sweetalert2';
-import { h2 } from 'framer-motion/client';
+import { Context } from "../provider/AuthProvider";
+import Swal from "sweetalert2";
 
-
-
-  
 export const Mybooking = () => {
+  let { user } = useContext(Context);
 
-    let {user}= useContext(Context)
+  const fetchFlights = async () => {
+    const { data } = await axios.get(
+      `https://air-ticket-server-xi.vercel.app/bookedData/${user?.email}`
+    ); // Replace with your API
+    return data;
+  };
 
-    const fetchFlights = async () => {
+  const { data, isLoading, error, refetch } = useQuery({
+    queryKey: ["flightsBokking", user?.email],
+    queryFn: fetchFlights,
+  });
 
-    
-        const { data } = await axios.get(`http://localhost:3000/bookedData/${user?.email}`); // Replace with your API
-        return data;
-      };
+  if (isLoading) return <p>Loading flights...</p>;
+  if (error) return <p>Error loading flights: {error.message}</p>;
 
-    const { data, isLoading, error,refetch } = useQuery({
-        queryKey: ["flightsBokking",user?.email], 
-        queryFn: fetchFlights, 
-      });
-      if (isLoading) return <p>Loading flights...</p>;
-    if (error) return <p>Error loading flights: {error.message}</p>;
-
-
-    let handleDelete=(id,flight_id)=>{
-
-        // console.log(id,flight_id)
-
-        Swal.fire({
-            title: "Are you sure?",
-            text: "Do you Want to Delete this item?",
-            icon: "question",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Yes, I Want"
-          }).then((result) => {
-            if (result.isConfirmed) {
-                axios.delete(`http://localhost:3000/bookedData/${id}?flight_id=${flight_id}`)
-                .then((res)=>{
-                    if(res.data.deletedCount>0){
-                        refetch()
-                        Swal.fire({
-                            title: "This item is successfully deleted !",
-                            text: "This user is successfully deleted !",
-                            icon: "success"
-                          });
-                    }
-                })
-              
+  let handleDelete = (id, flight_id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "Do you Want to Delete this item?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, I Want",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios
+          .delete(`https://air-ticket-server-xi.vercel.app/bookedData/${id}?flight_id=${flight_id}`)
+          .then((res) => {
+            if (res.data.deletedCount > 0) {
+              refetch();
+              Swal.fire({
+                title: "Deleted!",
+                text: "This booking has been successfully removed.",
+                icon: "success",
+              });
             }
           });
       }
+    });
+  };
 
+  if (data.length === 0) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <h2 className="text-4xl font-bold text-red-500 animate-pulse">
+          🚀 No Data Found! 🚀
+        </h2>
+      </div>
+    );
+  }
 
-
-
-      if (data.length === 0) {
-        return (
-          <div className="flex justify-center items-center h-screen">
-            <h2 className="text-4xl font-bold text-red-500 animate-pulse">
-              🚀 No Data Found! 🚀
-            </h2>
-          </div>
-        );
-      }
-      
-    
-       
-        
-        
-        
-      
-
-    
-  
   return (
     <div className="container mx-auto p-4">
       <h2 className="text-2xl font-bold text-center text-blue-600 mb-6">
@@ -124,7 +104,7 @@ export const Mybooking = () => {
                 <td className="py-3 px-4">
                   <span
                     className={`px-3 py-1 rounded-md text-white text-sm ${
-                      booking.status === "confirmed"
+                      booking.status === "approved"
                         ? "bg-green-500"
                         : "bg-yellow-500"
                     }`}
@@ -133,12 +113,17 @@ export const Mybooking = () => {
                   </span>
                 </td>
                 <td className="py-3 px-4">
-                  <button
-                    onClick={() => handleDelete(booking._id,booking.flight_id)}
-                    className="bg-red-500 hover:bg-red-700 text-white px-3 py-1 rounded-md transition duration-200"
-                  >
-                    Delete
-                  </button>
+                  {
+                    booking.status == "approved" && <td className="py-2 px-2 bg-amber-300 rounded-4xl font-bold">none</td>
+                  }
+                  {booking.status !== "approved" && (
+                    <button
+                      onClick={() => handleDelete(booking._id, booking.flight_id)}
+                      className="bg-red-500 hover:bg-red-700 text-white px-3 py-1 rounded-md transition duration-200"
+                    >
+                      Delete
+                    </button>
+                  )}
                 </td>
               </motion.tr>
             ))}
@@ -146,5 +131,5 @@ export const Mybooking = () => {
         </motion.table>
       </div>
     </div>
-  )
-}
+  );
+};

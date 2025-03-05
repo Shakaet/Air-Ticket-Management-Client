@@ -4,17 +4,21 @@ import React, { useContext } from 'react'
 import { useParams } from 'react-router-dom'
 import { Context } from '../provider/AuthProvider';
 import Swal from 'sweetalert2';
+import useAdmin from '../hook/useAdmin';
 
 export const FlightsDetails = () => {
+
+
+  let [isAdmin]= useAdmin()
 
     let {id}= useParams()
 
     let {user}=useContext(Context)
-    console.log(user)
+    // console.log(user)
     
 
     const fetchFlights = async () => {
-        const { data } = await axios.get(`http://localhost:3000/flightsDetails/${id}`); // Replace with your API
+        const { data } = await axios.get(`https://air-ticket-server-xi.vercel.app/flightsDetails/${id}`); // Replace with your API
         return data;
       };
 
@@ -38,9 +42,9 @@ export const FlightsDetails = () => {
 
         }
 
-        console.log(bookData)
+        // console.log(bookData)
 
-        axios.post("http://localhost:3000/bookedData",bookData)
+        axios.post("https://air-ticket-server-xi.vercel.app/bookedData",bookData)
         .then((res) => {
           if (res.data.insertedId) {
             refetch()
@@ -93,7 +97,7 @@ export const FlightsDetails = () => {
             </p>
             <button
             onClick={()=>handlebook(flights)}
-              disabled={flights?.status=="unavailable"}
+              disabled={flights?.status=="unavailable"|| isAdmin}
               className={`py-2 px-4 rounded-md text-white ${flights?.status ? 'bg-blue-500' : 'bg-gray-500 cursor-not-allowed'}`}
             >
               {flights?.status=="available" ? 'Book Now' : 'Not Available'}

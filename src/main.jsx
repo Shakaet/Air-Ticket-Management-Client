@@ -8,7 +8,7 @@ import {
 } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { MainLayout } from './layout/MainLayout.jsx';
-import { Home } from './component/Home.jsx';
+
 
 import { Register } from './component/Register.jsx';
 import AuthProvider from './provider/AuthProvider.jsx';
@@ -19,6 +19,12 @@ import { FlightsDetails } from './component/flightsDetails.jsx';
 import { Mybooking } from './component/Mybooking.jsx';
 import PrivateRoute from './assets/route/PrivateRoute.jsx';
 import UserRoute from './assets/route/UserRoute.jsx';
+import AdminRoutes from './assets/route/AdminRoutes.jsx';
+
+
+import ManageBooking from './component/ManageBooking.jsx';
+import ManageUsers from './component/ManageUsers.jsx';
+import Home from './component/Home.jsx';
 
 
 
@@ -55,6 +61,14 @@ const router = createBrowserRouter([
       {
         path:"/mybookings",
         element:<UserRoute><Mybooking></Mybooking></UserRoute>
+      },
+      {
+        path:"/managebooking",
+        element:<AdminRoutes><ManageBooking></ManageBooking></AdminRoutes>
+      },
+      {
+        path:"/manageUser",
+        element:<AdminRoutes><ManageUsers></ManageUsers></AdminRoutes>
       }
     ]
   },

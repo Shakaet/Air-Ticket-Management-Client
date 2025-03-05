@@ -29,7 +29,7 @@ export const SocialLogin = () => {
 
             
       
-            axios.post("http://localhost:3000/users",usersData)
+            axios.post("https://air-ticket-server-xi.vercel.app/users",usersData)
             .then((res)=>{
                 if(res.data.insertedId){
                     // alert("user added")
